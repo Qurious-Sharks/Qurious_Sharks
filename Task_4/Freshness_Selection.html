@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select and Upload Image</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            color: #4CAF50;
+        }
+
+        .image-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .image-grid img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s, border-color 0.3s;
+            border: 3px solid transparent;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .image-grid img:hover {
+            transform: scale(1.05);
+            border-color: #ddd;
+        }
+
+        .image-grid img.selected {
+            border-color: #4CAF50; /* Highlight selected image with green */
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4); /* Green glow effect */
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        a:hover {
+            background-color: yellowgreen;
+            transform: translateY(-3px);
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <h1>Select an Image for Detection</h1>
+    <form action="{{ url_for('Fresh') }}" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="image_path" id="selected-image" required>
+        <div class="image-grid">
+            {% for image in listofimages %}
+            <div>
+                <img src="{{ url_for('static', filename='FreshnessImages/' + image) }}" 
+                     alt="Image {{ loop.index }}" 
+                     onclick="selectImage('{{ image }}', this);">
+            </div>
+            {% endfor %}
+        </div>
+        <br>
+        <input type="submit" value="Process Selected Image">
+    </form>
+    <br>
+    <a href="{{ url_for('Home') }}">Go back</a>
+
+    <script>
+        function selectImage(imagePath, imgElement) {
+            // Clear previous selection
+            const images = document.querySelectorAll('.image-grid img');
+            images.forEach(image => image.classList.remove('selected'));
+
+            // Mark this image as selected
+            imgElement.classList.add('selected');
+
+            // Set the selected image path
+            document.getElementById('selected-image').value = imagePath;
+        }
+    </script>
+</body>
+</html>
